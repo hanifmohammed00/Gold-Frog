@@ -1,10 +1,13 @@
-![Gold Frog](assets/banner.png)
+<p align="center">
+  <img src="assets/banner.png" alt="Gold Frog Banner" width="100%">
+</p>
+
+# 🐸 Gold Frog
 
 A Telegram bot that summarizes stock news sentiment on demand. Ask it about a
 ticker in plain English and it pulls recent articles, classifies each one, and
 replies with a short per-article breakdown plus an overall Bullish / Bearish /
-Neutral read. It also answers price questions, compares tickers, and pushes
-real-time alerts and a daily digest for a watchlist.
+Neutral read...
 
 ## What it does
 
