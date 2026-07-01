@@ -134,3 +134,55 @@ gold_frog/
 ```
 
 See [SOURCES.md](SOURCES.md) for what each external service is responsible for.
+
+## How news fetching works
+
+All news comes from TradingView, scraped in two stages by
+[`gold_frog/adapters/tradingview.py`](gold_frog/adapters/tradingview.py):
+
+1. **Headlines** — [`tradingview-scraper`](https://github.com/mnwato/tradingview-scraper)'s
+   `NewsScraper.scrape_headlines(symbol, exchange, sort="latest")` hits
+   TradingView's unofficial news-list endpoint for a given
+   exchange-qualified symbol (e.g. `NASDAQ:AAPL`) and returns the latest
+   headlines with a story `id`, `title`, `provider`, `link`, and
+   `published` (unix timestamp).
+2. **Full body** — headlines alone aren't enough to classify sentiment, so
+   for each headline we keep, `_story_body()` calls TradingView's
+   `v3/story` endpoint directly (`https://news-headlines.tradingview.com/v3/story?id=...`)
+   and gets back the article as an `astDescription` — a nested AST of
+   `{type, children}` nodes rather than plain text. `_flatten()` walks
+   that tree recursively, concatenating string leaves and unwrapping
+   inline ticker tokens (e.g. `NASDAQ:AAPL` mentioned mid-sentence), to
+   produce the plain-text body used for classification. If the AST is
+   empty, we fall back to `shortDescription`.
+
+**Exchange resolution.** TradingView news is keyed by exchange (NASDAQ /
+NYSE / AMEX), and we don't always know which one a ticker is on. Finnhub's
+`profile2` resolves it first; if that guess comes back with no news, the
+bot retries the other two exchanges in turn (`_fetch_news_any_exchange` in
+`telegram_bot.py`) rather than reporting a false "no news."
+
+**Date filtering.** `fetch_news(since, until)` filters headlines by their
+`published` timestamp, converted to the *local* calendar day (not UTC),
+so "today" / "yesterday" / "last week" line up with what the user means
+rather than a UTC cutoff.
+
+**No API key required.** Both endpoints are public; `TRADINGVIEW_COOKIE`
+is only needed if TradingView starts serving CAPTCHA challenges instead
+of data, in which case it's attached as a `Cookie` header on the story
+request.
+
+**Caveat.** This is an unofficial scraper against endpoints TradingView
+doesn't publish a contract for — it can break if TradingView changes its
+markup or rate-limits the scraper. There's no retry/backoff on the
+scraper calls themselves; a failure for one ticker just yields an empty
+list rather than crashing the bot.
+
+## Acknowledgments
+
+News scraping is powered by [tradingview-scraper](https://github.com/mnwato/tradingview-scraper) —
+huge thanks to [@mnwato](https://github.com/mnwato) for maintaining it. It
+does the heavy lifting of scraping TradingView's headline feed so this
+project only has to handle exchange resolution, full-article-body
+fetching, and date-window filtering on top.
+
