@@ -1,4 +1,4 @@
-# Gold Frog
+![Gold Frog](assets/banner.png)
 
 A Telegram bot that summarizes stock news sentiment on demand. Ask it about a
 ticker in plain English and it pulls recent articles, classifies each one, and
