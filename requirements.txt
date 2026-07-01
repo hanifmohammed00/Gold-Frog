@@ -1,0 +1,7 @@
+requests>=2.31
+# News feed (unofficial TradingView scraper). Needs pkg_resources, which was
+# removed in setuptools 81+, so pin setuptools below that.
+tradingview-scraper
+setuptools<81
+# Multi-day price history (5d / 1mo / 1y change) for the price commands.
+yfinance>=0.2.40
