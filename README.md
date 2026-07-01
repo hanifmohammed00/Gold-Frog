@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="assets/banner.png" alt="Gold Frog Banner" width="100%">
-</p>
+![Gold Frog](assets/banner.png)
 
 # 🐸 Gold Frog
 
