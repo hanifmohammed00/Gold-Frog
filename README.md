@@ -5,7 +5,8 @@
 A Telegram bot that summarizes stock news sentiment on demand. Ask it about a
 ticker in plain English and it pulls recent articles, classifies each one, and
 replies with a short per-article breakdown plus an overall Bullish / Bearish /
-Neutral read...
+Neutral read. It also answers price questions, compares tickers, and pushes
+real-time alerts and a daily digest for a watchlist.
 
 ## What it does
 
