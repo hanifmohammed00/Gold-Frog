@@ -1,6 +1,0 @@
-# Gold Frog watchlist — one ticker per line. Lines starting with # are ignored.
-# Used for real-time alerts and the daily digest; also editable from chat
-# ("watch add/remove/list"). Sample list — replace with your own.
-AAPL
-MSFT
-NVDA
